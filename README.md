@@ -1,4 +1,4 @@
-# scroll_to_index
+# scroll_to_index_plus
 
 Programmatic scroll-to-index for any Flutter `ScrollView` — `ListView`,
 `GridView`, `CustomScrollView`, `SingleChildScrollView`, and more.
@@ -30,7 +30,7 @@ with fully customizable decoration.
 
 ```yaml
 dependencies:
-  scroll_to_index: latest
+  scroll_to_index_plus: latest
 ```
 
 ---
