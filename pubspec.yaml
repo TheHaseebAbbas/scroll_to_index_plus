@@ -4,7 +4,16 @@ description: >
   unknown item heights. Uses a two-phase scroll hidden behind a seamless
   fade transition.
 version: 1.0.0
-homepage: https://github.com/thehaseebabbas/scroll_to_index
+homepage: https://github.com/thehaseebabbas/scroll_to_index_plus
+repository: https://github.com/thehaseebabbas/scroll_to_index_plus
+issue_tracker: https://github.com/thehaseebabbas/scroll_to_index_plus/issues
+topics:
+  - listview
+  - scroll
+  - ui
+  - widget
+
+license: MIT
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
