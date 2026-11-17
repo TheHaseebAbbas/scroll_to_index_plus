@@ -254,6 +254,74 @@ ScrollablePositionedList(
 
 ---
 
+## Scrolling to an invalid form field
+
+A common use is "after a failed save, scroll to the first invalid field".
+Give every field a label from an enum, wrap it in a `PositionedListItem`
+(it can be nested inside cards — it does not have to be a direct child of the
+list), and call `ensureIndexVisible` after validation fails:
+
+```dart
+enum Field { name, email, photo, phone, bio }
+
+ScrollablePositionedList(
+  controller: _controller,
+  child: ListView(
+    controller: _controller.scrollController,
+    // Keep every field built so it can be measured (see below).
+    scrollCacheExtent: const ScrollCacheExtent.pixels(5000),
+    children: [
+      PositionedListItem(
+        index: Field.name.index,
+        child: Card(child: TextFormField(/* ... */)),
+      ),
+      // cards, spacers, ...
+      PositionedListItem(
+        index: Field.bio.index,
+        child: Card(child: TextFormField(/* ... */)),
+      ),
+    ],
+  ),
+)
+
+void _onSave() {
+  if (!_formKey.currentState!.validate()) {
+    _controller.ensureIndexVisible(Field.bio.index, alignment: 0.1);
+  }
+}
+```
+
+`ensureIndexVisible` does nothing when the field is already visible, so a
+field the user can see is never moved. Otherwise it behaves like
+`scrollToIndex`. By default it waits for the end of the next frame first, so
+error text that appears above or below the target is laid out before it
+measures. Use `minVisible` (0..1) to require only part of the field to be in
+view, `highlight: true` to highlight it, and `afterFrame: false` to measure
+immediately.
+
+**Fields must be built.** Visibility is measured from live render objects, so
+a field that is not built counts as not visible and takes the slow
+(fade + jump) path. Give the list a large cache extent
+(`scrollCacheExtent` / `cacheExtent`) when the form is not huge, and the
+fields are always built.
+
+**Labels do not have to be contiguous.** Enum indices or ids work, even with
+cards and spacers between fields. For items that are not built yet, the
+offset is estimated from the labels the controller has seen so far, which is
+best-effort until the item builds. If the labels seen so far are
+gap-free (`0, 1, 2, ...`) the estimate extrapolates like 1.0.0 did.
+
+You can ask the controller directly:
+
+```dart
+_controller.isIndexBuilt(Field.bio.index);          // bool
+_controller.extentOf(Field.bio.index);              // live height, or null
+_controller.isIndexVisible(Field.bio.index,
+    minVisible: 0.5);                               // at least half in view
+```
+
+---
+
 ## Highlight
 
 Enable the built-in highlight by setting `enableHighlight: true`.
@@ -276,6 +344,16 @@ ScrollToIndexListView(
   ),
   itemBuilder: (context, index) => MyTile(items[index]),
 )
+```
+
+Set `highlightDuration` on the controller to make the highlight clear itself
+(by default it stays until cleared). For `scrollToIndex` and
+`ensureIndexVisible` the time is counted from when the scroll finishes:
+
+```dart
+final _controller = ScrollablePositionedController(
+  highlightDuration: const Duration(seconds: 2),
+);
 ```
 
 You can also highlight without scrolling, or clear the highlight:
@@ -303,6 +381,7 @@ returns its child directly — zero extra widgets in the tree.
 | `scrollDuration` | `380ms`     | Animated scroll duration when target is already visible |
 | `scrollCurve`    | `easeInOut` | Scroll animation curve                                  |
 | `buildTimeout`   | `600ms`     | Max wait time for an off-screen item to build           |
+| `highlightDuration` | `null`   | Highlight clears itself after this long (`null` = stays) |
 
 **Properties**
 
@@ -315,7 +394,11 @@ returns its child directly — zero extra widgets in the tree.
 
 | Method                                         | Description                                         |
 | ---------------------------------------------- | --------------------------------------------------- |
-| `scrollToIndex(index, {alignment, highlight})` | Animated scroll; fades for off-screen items         |
+| `scrollToIndex(index, {alignment, highlight})` | Animated scroll; fades for off-screen items; a newer call cancels it |
+| `ensureIndexVisible(index, {alignment, minVisible, highlight, afterFrame})` | Scrolls only if less than `minVisible` of the item is in view |
+| `isIndexBuilt(index)`                          | Whether the item is currently built                 |
+| `extentOf(index)`                              | Live main-axis size, or `null` if not built         |
+| `isIndexVisible(index, {minVisible})`          | Whether at least `minVisible` (0..1) is in the viewport |
 | `jumpToIndex(index, {alignment, highlight})`   | Instant jump, no animation or fade                  |
 | `clearHighlight()`                             | Clears the current highlight without scrolling      |
 | `dispose()`                                    | Releases resources — always call in `State.dispose` |

@@ -3,7 +3,7 @@ description: >
   Programmatic scroll-to-index for any Flutter ScrollView with variable /
   unknown item heights. Uses a two-phase scroll hidden behind a seamless
   fade transition.
-version: 1.0.0
+version: 2.0.0
 homepage: https://github.com/thehaseebabbas/scroll_to_index_plus
 repository: https://github.com/thehaseebabbas/scroll_to_index_plus
 issue_tracker: https://github.com/thehaseebabbas/scroll_to_index_plus/issues
@@ -16,8 +16,8 @@ topics:
 license: MIT
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:

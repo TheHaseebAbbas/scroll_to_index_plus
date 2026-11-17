@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '../index_alignment.dart';
 import '../positioned_item_highlight.dart';
@@ -159,7 +160,9 @@ class _ScrollToIndexCustomScrollViewState
         shrinkWrap: widget.shrinkWrap,
         center: widget.center,
         anchor: widget.anchor,
-        cacheExtent: widget.cacheExtent,
+        scrollCacheExtent: widget.cacheExtent == null
+            ? null
+            : ScrollCacheExtent.pixels(widget.cacheExtent!),
         semanticChildCount: widget.semanticChildCount,
         dragStartBehavior: widget.dragStartBehavior,
         keyboardDismissBehavior: widget.keyboardDismissBehavior,

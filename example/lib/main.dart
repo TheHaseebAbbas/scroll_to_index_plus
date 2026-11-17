@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index_plus/scroll_to_index_plus.dart';
 
+import 'form_demo.dart';
+
 void main() => runApp(const ExampleApp());
 
 class ExampleApp extends StatelessWidget {
@@ -57,7 +59,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 5, vsync: this);
+    _tabs = TabController(length: 6, vsync: this);
   }
 
   @override
@@ -81,6 +83,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
             Tab(text: 'CustomScrollView'),
             Tab(text: 'SingleChildScrollView'),
             Tab(text: 'Manual (lower-level)'),
+            Tab(text: 'Form'),
           ],
         ),
       ),
@@ -92,6 +95,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
           _CustomScrollViewExample(),
           _SingleChildScrollViewExample(),
           _ManualExample(),
+          FormDemo(),
         ],
       ),
     );
