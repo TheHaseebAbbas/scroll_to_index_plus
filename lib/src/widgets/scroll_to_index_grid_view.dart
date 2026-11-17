@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '../index_alignment.dart';
 import '../positioned_item_highlight.dart';
@@ -152,7 +153,9 @@ class _ScrollToIndexGridViewState extends State<ScrollToIndexGridView> {
         addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
         addRepaintBoundaries: widget.addRepaintBoundaries,
         addSemanticIndexes: widget.addSemanticIndexes,
-        cacheExtent: widget.cacheExtent,
+        scrollCacheExtent: widget.cacheExtent == null
+            ? null
+            : ScrollCacheExtent.pixels(widget.cacheExtent!),
         semanticChildCount: widget.semanticChildCount,
         dragStartBehavior: widget.dragStartBehavior,
         keyboardDismissBehavior: widget.keyboardDismissBehavior,
