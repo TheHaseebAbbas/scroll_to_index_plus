@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "example-web",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd example && flutter run -d web-server --web-port 8089 --web-hostname localhost"],
+      "port": 8089
+    }
+  ]
+}
